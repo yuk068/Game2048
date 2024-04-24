@@ -4,10 +4,10 @@ import java.util.Random;
 
 public class Board {
 
-    private static final int DEFAULT_WIDTH = 4;
-    private static final int DEFAULT_LENGTH = 4;
+    private static final int DEFAULT_ROW_NUM = 4;
+    private static final int DEFAULT_COL_NUM = 4;
     private static final int DEFAULT_INITIAL_NODE = 2;
-    private static Square[][] board = new Square[DEFAULT_LENGTH][DEFAULT_WIDTH];
+    private static Square[][] board = new Square[DEFAULT_COL_NUM][DEFAULT_ROW_NUM];
     //    private static Square[][] prevBoard;
     private static Board session;
 
@@ -30,8 +30,8 @@ public class Board {
     }
 
     private static void initializeBoard() {
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
+        for (int i = 0; i < DEFAULT_ROW_NUM; i++) {
+            for (int j = 0; j < DEFAULT_COL_NUM; j++) {
                 board[i][j] = new Square(i, j);
             }
         }
@@ -42,14 +42,14 @@ public class Board {
         NumberNode node = new NumberNode();
         node.setRandomInitialValue();
 
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
+        for (int i = 0; i < DEFAULT_ROW_NUM; i++) {
+            for (int j = 0; j < DEFAULT_COL_NUM; j++) {
                 if (!board[i][j].isOccupied()) {
                     int row;
                     int col;
                     do {
-                        row = random.nextInt(4);
-                        col = random.nextInt(4);
+                        row = random.nextInt(DEFAULT_ROW_NUM);
+                        col = random.nextInt(DEFAULT_COL_NUM);
                     } while (board[row][col].isOccupied());
 
                     board[row][col].setNumberNode(node);
@@ -61,8 +61,8 @@ public class Board {
     }
 
     public void display() {
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
+        for (int i = 0; i < DEFAULT_ROW_NUM; i++) {
+            for (int j = 0; j < DEFAULT_COL_NUM; j++) {
                 System.out.printf("[%4s] ", (board[i][j].isOccupied() ?
                         String.valueOf(board[i][j].getNumberNode().getValue()) : " "));
             }
@@ -101,8 +101,8 @@ public class Board {
     }
 
     private void moveMergeHelper(boolean moveOrMerge, int startRow, int startCol, int deltaRow, int deltaCol) {
-        for (int row = startRow; (startRow == 0 ? row < 4 : row >= 0); row += (startRow == 0 ? 1 : -1)) {
-            for (int col = startCol; (startCol == 0 ? col < 4 : col >= 0); col += (startCol == 0 ? 1 : -1)) {
+        for (int row = startRow; (startRow == 0 ? row < DEFAULT_ROW_NUM : row >= 0); row += (startRow == 0 ? 1 : -1)) {
+            for (int col = startCol; (startCol == 0 ? col < DEFAULT_COL_NUM : col >= 0); col += (startCol == 0 ? 1 : -1)) {
                 Square square = board[row][col];
                 if (square.isOccupied()) {
                     NumberNode currentNode = square.getNumberNode();
@@ -119,11 +119,11 @@ public class Board {
     }
 
     private void moveMergeDown(boolean moveOrMerge) {
-        moveMergeHelper(moveOrMerge, 3, 0, 1, 0);
+        moveMergeHelper(moveOrMerge, DEFAULT_ROW_NUM - 1, 0, 1, 0);
     }
 
     private void moveMergeRight(boolean moveOrMerge) {
-        moveMergeHelper(moveOrMerge, 0, 3, 0, 1);
+        moveMergeHelper(moveOrMerge, 0, DEFAULT_COL_NUM - 1, 0, 1);
     }
 
     private void moveMergeLeft(boolean moveOrMerge) {
@@ -155,15 +155,15 @@ public class Board {
     }
 
     private static void nullifyAllRecentlyMerged() {
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
+        for (int i = 0; i < DEFAULT_ROW_NUM; i++) {
+            for (int j = 0; j < DEFAULT_COL_NUM; j++) {
                 board[i][j].nullifyRecentlyMerged();
             }
         }
     }
 
     private boolean isValidPosition(int row, int col) {
-        return row >= 0 && row < 4 && col >= 0 && col < 4;
+        return row >= 0 && row < DEFAULT_ROW_NUM && col >= 0 && col < DEFAULT_COL_NUM;
     }
 
     private static Square[][] copyBoard(Square[][] originalMatrix) {
