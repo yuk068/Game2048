@@ -4,15 +4,76 @@ import java.util.Random;
 
 public class Board {
 
-    public static final int DEFAULT_ROW_NUM = 4;
-    public static final int DEFAULT_COL_NUM = 4;
-    public static final int DEFAULT_INITIAL_NODE = 2;
-    private static Square[][] board = new Square[DEFAULT_COL_NUM][DEFAULT_ROW_NUM];
+    public static int DEFAULT_ROW_NUM;
+    public static int DEFAULT_COL_NUM;
+    public static int DEFAULT_INITIAL_NODE;
+    public static int DEFAULT_SPAWN;
+    private static Square[][] board;
     private static Square[][] prevBoard;
     private static Board session;
 
     private Board() {
+        setDefaultRowNum(4);
+        setDefaultColNum(4);
+        setDefaultInitialNode(2);
+        setDefaultSpawn(1);
+        board = new Square[DEFAULT_ROW_NUM][DEFAULT_COL_NUM];
         init();
+    }
+
+    private Board(int numRow, int numCol) {
+        setDefaultRowNum(numRow);
+        setDefaultColNum(numCol);
+        setDefaultInitialNode(2);
+        setDefaultSpawn(1);
+        board = new Square[DEFAULT_ROW_NUM][DEFAULT_COL_NUM];
+        init();
+    }
+
+    private Board(int numRow, int numCol, int numInitNode, int numSpawn) {
+        setDefaultRowNum(numRow);
+        setDefaultColNum(numCol);
+        setDefaultInitialNode(numInitNode);
+        setDefaultSpawn(numSpawn);
+        board = new Square[DEFAULT_ROW_NUM][DEFAULT_COL_NUM];
+        init();
+    }
+
+    public static Board getInstance() {
+        if (session == null) {
+            session = new Board();
+        }
+        return session;
+    }
+
+    public static Board getInstance(int numRow, int numCol) {
+        if (session == null) {
+            session = new Board(numRow, numCol);
+        }
+        return session;
+    }
+
+    public static Board getInstance(int numRow, int numCol, int numInitNode, int numSpawn) {
+        if (session == null) {
+            session = new Board(numRow, numCol, numInitNode, numSpawn);
+        }
+        return session;
+    }
+
+    private void setDefaultRowNum(int numRow) {
+        DEFAULT_ROW_NUM = numRow;
+    }
+
+    private void setDefaultColNum(int numCol) {
+        DEFAULT_COL_NUM = numCol;
+    }
+
+    public void setDefaultInitialNode(int numInitNode) {
+        DEFAULT_INITIAL_NODE = numInitNode;
+    }
+
+    public void setDefaultSpawn(int numSpawn) {
+        DEFAULT_SPAWN = numSpawn;
     }
 
     public static Square[][] getPrevBoard() {
@@ -25,13 +86,6 @@ public class Board {
 
     public static Square[][] getBoard() {
         return board;
-    }
-
-    public static Board getInstance() {
-        if (session == null) {
-            session = new Board();
-        }
-        return session;
     }
 
     private static void init() {
@@ -49,7 +103,7 @@ public class Board {
         }
     }
 
-    protected static boolean placeRandomNumberNode() {
+    protected static void placeRandomNumberNode() {
         Random random = new Random();
         NumberNode node = new NumberNode();
         node.setRandomInitialValue();
@@ -65,11 +119,10 @@ public class Board {
                     } while (board[row][col].isOccupied());
 
                     board[row][col].setNumberNode(node);
-                    return true;
+                    return;
                 }
             }
         }
-        return false;
     }
 
     private void moveMergeHelper(boolean moveOrMerge, int startRow, int startCol, int deltaRow, int deltaCol) {
