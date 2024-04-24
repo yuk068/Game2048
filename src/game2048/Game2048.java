@@ -9,6 +9,7 @@ public class Game2048 {
     private Board board;
     private boolean displayStyleBracketOrBorder = false;
     public static final Scanner in = new Scanner(System.in);
+    private int moves = 0;
 
     private Game2048(Board board) {
         this.board = board;
@@ -86,8 +87,8 @@ public class Game2048 {
         System.out.println();
     }
 
-    public void move(String direction) {
-        switch (direction.toLowerCase()) {
+    public void move(String operation) {
+        switch (operation.toLowerCase()) {
             case "w":
                 moveOperation("Up");
                 break;
@@ -100,6 +101,13 @@ public class Game2048 {
             case "a":
                 moveOperation("Left");
                 break;
+            case "undo":
+                System.out.println("Undo coming soon!");
+                break;
+            case "shuffle":
+                System.out.println("Shuffling...");
+                board.shuffleBoard();
+                break;
             default:
         }
     }
@@ -107,7 +115,6 @@ public class Game2048 {
     private void moveOperation(String direction) {
         String movingIn = "moveMerge" + direction;
         try {
-            System.out.println("Moving " + direction.toLowerCase());
             Board.setPrevBoard(Board.copyOfBoard(Board.getBoard()));
 
             Method method = Board.class.getDeclaredMethod(movingIn, boolean.class);
@@ -117,10 +124,12 @@ public class Game2048 {
             board.nullifyAllRecentlyMerged();
 
             if (!Board.areBoardsEqual(Board.getPrevBoard(), Board.getBoard())) {
+                moves++;
                 for (int i = 0; i < Board.DEFAULT_SPAWN; i++) {
                     Board.placeRandomNumberNode();
                 }
             }
+            System.out.printf("Moving %-10s Moves:  %d%n", direction.toLowerCase(), moves);
         } catch (Exception e) {
             System.out.println("Invalid direction: " + direction);
         }

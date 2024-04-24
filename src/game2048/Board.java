@@ -1,5 +1,8 @@
 package game2048;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 public class Board {
@@ -92,6 +95,10 @@ public class Board {
         return board;
     }
 
+    public static void setBoard(Square[][] board) {
+        Board.board = board;
+    }
+
     private static void init() {
         initializeBoard();
         for (int i = 0; i < DEFAULT_INITIAL_NODE; i++) {
@@ -157,6 +164,30 @@ public class Board {
 
     protected void moveMergeLeft(boolean moveOrMerge) {
         moveMergeHelper(moveOrMerge, 0, 0, 0, -1);
+    }
+
+    public void shuffleBoard() {
+        List<NumberNode> numberNodes = new ArrayList<>();
+
+        for (int i = 0; i < DEFAULT_ROW_NUM; i++) {
+            for (int j = 0; j < DEFAULT_COL_NUM; j++) {
+                if (board[i][j].isOccupied()) {
+                    numberNodes.add(board[i][j].getNumberNode());
+                }
+            }
+        }
+
+        Collections.shuffle(numberNodes);
+
+        int index = 0;
+        for (int i = 0; i < DEFAULT_ROW_NUM; i++) {
+            for (int j = 0; j < DEFAULT_COL_NUM; j++) {
+                if (board[i][j].isOccupied()) {
+                    board[i][j].setNumberNode(numberNodes.get(index++));
+                }
+            }
+        }
+        prevBoard = null;
     }
 
     private void moveNode(int row, int col, NumberNode currentNode, int deltaRow, int deltaCol) {
