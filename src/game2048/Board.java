@@ -15,10 +15,6 @@ public class Board {
         init();
     }
 
-    public Square[][] getBoard() {
-        return board;
-    }
-
     public static Board getInstance() {
         if (session == null) {
             session = new Board();
@@ -26,7 +22,7 @@ public class Board {
         return session;
     }
 
-    public static void init() {
+    private static void init() {
         initializeBoard();
         for (int i = 0; i < DEFAULT_INITIAL_NODE; i++) {
             placeRandomNumberNode();
@@ -45,29 +41,23 @@ public class Board {
         Random random = new Random();
         NumberNode node = new NumberNode();
         node.setRandomInitialValue();
-        boolean boardFull = true;
+
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 if (!board[i][j].isOccupied()) {
-                    boardFull = false;
-                    break;
+                    int row;
+                    int col;
+                    do {
+                        row = random.nextInt(4);
+                        col = random.nextInt(4);
+                    } while (board[row][col].isOccupied());
+
+                    board[row][col].setNumberNode(node);
+                    return true;
                 }
             }
-            if (!boardFull) {
-                break;
-            }
         }
-        if (boardFull) {
-            return false;
-        }
-        int row;
-        int col;
-        do {
-            row = random.nextInt(4);
-            col = random.nextInt(4);
-        } while (board[row][col].isOccupied());
-        board[row][col].setNumberNode(node);
-        return true;
+        return false;
     }
 
     public void display() {
@@ -87,29 +77,26 @@ public class Board {
                 moveMergeUp(true);
                 moveMergeUp(false);
                 moveMergeUp(true);
-                nullifyAllRecentlyMerged();
                 break;
             case "s":
                 System.out.println("Moving down");
                 moveMergeDown(true);
                 moveMergeDown(false);
                 moveMergeDown(true);
-                nullifyAllRecentlyMerged();
                 break;
             case "d":
                 System.out.println("Moving right");
                 moveMergeRight(true);
                 moveMergeRight(false);
                 moveMergeRight(true);
-                nullifyAllRecentlyMerged();
                 break;
             case "a":
                 System.out.println("Moving left");
                 moveMergeLeft(true);
                 moveMergeLeft(false);
                 moveMergeLeft(true);
-                nullifyAllRecentlyMerged();
         }
+        nullifyAllRecentlyMerged();
         placeRandomNumberNode();
     }
 
