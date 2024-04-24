@@ -61,19 +61,23 @@ public class Board {
     }
 
     private void setDefaultRowNum(int numRow) {
-        DEFAULT_ROW_NUM = numRow;
+        DEFAULT_ROW_NUM =
+                numRow == 0 ? 1 : Math.abs(numRow);
     }
 
     private void setDefaultColNum(int numCol) {
-        DEFAULT_COL_NUM = numCol;
+        DEFAULT_COL_NUM =
+                numCol == 0 ? 1 : Math.abs(numCol);
     }
 
     public void setDefaultInitialNode(int numInitNode) {
-        DEFAULT_INITIAL_NODE = numInitNode;
+        DEFAULT_INITIAL_NODE =
+                numInitNode == 0 ? 1 : Math.abs(numInitNode);
     }
 
     public void setDefaultSpawn(int numSpawn) {
-        DEFAULT_SPAWN = numSpawn;
+        DEFAULT_SPAWN =
+                numSpawn == 0 ? 1 : Math.abs(numSpawn);
     }
 
     public static Square[][] getPrevBoard() {
@@ -191,7 +195,7 @@ public class Board {
         return row >= 0 && row < DEFAULT_ROW_NUM && col >= 0 && col < DEFAULT_COL_NUM;
     }
 
-    protected static Square[][] copyBoard(Square[][] originalMatrix) {
+    protected static Square[][] copyOfBoard(Square[][] originalMatrix) {
         int numRows = originalMatrix.length;
         int numCols = originalMatrix[0].length;
         Square[][] copiedMatrix = new Square[numRows][numCols];

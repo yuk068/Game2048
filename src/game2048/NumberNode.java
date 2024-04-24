@@ -16,10 +16,6 @@ public class NumberNode implements Comparable<NumberNode> {
         this.value = value;
     }
 
-    public void setValue(int value) {
-        this.value = value;
-    }
-
     public int getValue() {
         return value;
     }
@@ -33,8 +29,8 @@ public class NumberNode implements Comparable<NumberNode> {
     }
 
     public void setRandomInitialValue() {
-        double randomNumber = new Random().nextDouble();
-        value = randomNumber < TWO_NODE_RATE ? 2 : 4;
+        double rate = new Random().nextDouble();
+        value = rate < TWO_NODE_RATE ? 2 : 4;
     }
 
     public NumberNode mergeWith(NumberNode other) {

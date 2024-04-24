@@ -87,7 +87,7 @@ public class Game2048 {
     }
 
     public void move(String direction) {
-        switch (direction) {
+        switch (direction.toLowerCase()) {
             case "w":
                 moveOperation("Up");
                 break;
@@ -108,7 +108,7 @@ public class Game2048 {
         String movingIn = "moveMerge" + direction;
         try {
             System.out.println("Moving " + direction.toLowerCase());
-            Board.setPrevBoard(Board.copyBoard(Board.getBoard()));
+            Board.setPrevBoard(Board.copyOfBoard(Board.getBoard()));
 
             Method method = Board.class.getDeclaredMethod(movingIn, boolean.class);
             method.invoke(board, true);
