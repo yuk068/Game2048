@@ -4,15 +4,27 @@ import java.util.Random;
 
 public class Board {
 
-    private static final int DEFAULT_ROW_NUM = 4;
-    private static final int DEFAULT_COL_NUM = 4;
-    private static final int DEFAULT_INITIAL_NODE = 2;
+    public static final int DEFAULT_ROW_NUM = 4;
+    public static final int DEFAULT_COL_NUM = 4;
+    public static final int DEFAULT_INITIAL_NODE = 2;
     private static Square[][] board = new Square[DEFAULT_COL_NUM][DEFAULT_ROW_NUM];
-    //    private static Square[][] prevBoard;
+    private static Square[][] prevBoard;
     private static Board session;
 
     private Board() {
         init();
+    }
+
+    public static Square[][] getPrevBoard() {
+        return prevBoard;
+    }
+
+    public static void setPrevBoard(Square[][] prevBoard) {
+        Board.prevBoard = prevBoard;
+    }
+
+    public static Square[][] getBoard() {
+        return board;
     }
 
     public static Board getInstance() {
@@ -37,7 +49,7 @@ public class Board {
         }
     }
 
-    private static boolean placeRandomNumberNode() {
+    protected static boolean placeRandomNumberNode() {
         Random random = new Random();
         NumberNode node = new NumberNode();
         node.setRandomInitialValue();
@@ -60,46 +72,6 @@ public class Board {
         return false;
     }
 
-    public void display() {
-        for (int i = 0; i < DEFAULT_ROW_NUM; i++) {
-            for (int j = 0; j < DEFAULT_COL_NUM; j++) {
-                System.out.printf("[%4s] ", (board[i][j].isOccupied() ?
-                        String.valueOf(board[i][j].getNumberNode().getValue()) : " "));
-            }
-            System.out.println("\n");
-        }
-    }
-
-    public void move(String direction) {
-        switch (direction) {
-            case "w":
-                System.out.println("Moving up");
-                moveMergeUp(true);
-                moveMergeUp(false);
-                moveMergeUp(true);
-                break;
-            case "s":
-                System.out.println("Moving down");
-                moveMergeDown(true);
-                moveMergeDown(false);
-                moveMergeDown(true);
-                break;
-            case "d":
-                System.out.println("Moving right");
-                moveMergeRight(true);
-                moveMergeRight(false);
-                moveMergeRight(true);
-                break;
-            case "a":
-                System.out.println("Moving left");
-                moveMergeLeft(true);
-                moveMergeLeft(false);
-                moveMergeLeft(true);
-        }
-        nullifyAllRecentlyMerged();
-        placeRandomNumberNode();
-    }
-
     private void moveMergeHelper(boolean moveOrMerge, int startRow, int startCol, int deltaRow, int deltaCol) {
         for (int row = startRow; (startRow == 0 ? row < DEFAULT_ROW_NUM : row >= 0); row += (startRow == 0 ? 1 : -1)) {
             for (int col = startCol; (startCol == 0 ? col < DEFAULT_COL_NUM : col >= 0); col += (startCol == 0 ? 1 : -1)) {
@@ -114,19 +86,19 @@ public class Board {
         }
     }
 
-    private void moveMergeUp(boolean moveOrMerge) {
+    protected void moveMergeUp(boolean moveOrMerge) {
         moveMergeHelper(moveOrMerge, 0, 0, -1, 0);
     }
 
-    private void moveMergeDown(boolean moveOrMerge) {
+    protected void moveMergeDown(boolean moveOrMerge) {
         moveMergeHelper(moveOrMerge, DEFAULT_ROW_NUM - 1, 0, 1, 0);
     }
 
-    private void moveMergeRight(boolean moveOrMerge) {
+    protected void moveMergeRight(boolean moveOrMerge) {
         moveMergeHelper(moveOrMerge, 0, DEFAULT_COL_NUM - 1, 0, 1);
     }
 
-    private void moveMergeLeft(boolean moveOrMerge) {
+    protected void moveMergeLeft(boolean moveOrMerge) {
         moveMergeHelper(moveOrMerge, 0, 0, 0, -1);
     }
 
@@ -154,7 +126,7 @@ public class Board {
         }
     }
 
-    private static void nullifyAllRecentlyMerged() {
+    protected void nullifyAllRecentlyMerged() {
         for (int i = 0; i < DEFAULT_ROW_NUM; i++) {
             for (int j = 0; j < DEFAULT_COL_NUM; j++) {
                 board[i][j].nullifyRecentlyMerged();
@@ -166,7 +138,7 @@ public class Board {
         return row >= 0 && row < DEFAULT_ROW_NUM && col >= 0 && col < DEFAULT_COL_NUM;
     }
 
-    private static Square[][] copyBoard(Square[][] originalMatrix) {
+    protected static Square[][] copyBoard(Square[][] originalMatrix) {
         int numRows = originalMatrix.length;
         int numCols = originalMatrix[0].length;
         Square[][] copiedMatrix = new Square[numRows][numCols];
@@ -178,15 +150,23 @@ public class Board {
         return copiedMatrix;
     }
 
-    private boolean areBoardsEqual(Square[][] board1, Square[][] board2) {
+    protected static boolean areBoardsEqual(Square[][] board1, Square[][] board2) {
         if (board1.length != board2.length || board1[0].length != board2[0].length) {
             return false;
         }
         for (int i = 0; i < board1.length; i++) {
             for (int j = 0; j < board1[0].length; j++) {
-                if ((board1[i][j].isOccupied() && board2[i][j].isOccupied()) &&
-                        board1[i][j].getNumberNode().getValue() !=
-                                board2[i][j].getNumberNode().getValue()) {
+                boolean isOccupied1 = board1[i][j].isOccupied();
+                boolean isOccupied2 = board2[i][j].isOccupied();
+
+                if (isOccupied1 && isOccupied2) {
+                    NumberNode numberNode1 = board1[i][j].getNumberNode();
+                    NumberNode numberNode2 = board2[i][j].getNumberNode();
+
+                    if (numberNode1 != null && numberNode2 != null && numberNode1.getValue() != numberNode2.getValue()) {
+                        return false;
+                    }
+                } else if (isOccupied1 != isOccupied2) {
                     return false;
                 }
             }
