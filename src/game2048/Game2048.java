@@ -42,7 +42,11 @@ public class Game2048 {
 
     public void start() {
         String op = "0";
-        System.out.println("Welcome to 2048!\nWASD to move\nQ    to quit");
+        System.out.println("Welcome to 2048!");
+        System.out.println("wasd    to move");
+        System.out.println("q       to quit");
+        System.out.println("shuffle to shuffle the board");
+        System.out.println("undo    to undo last action (WIP)");
         while (!op.equals("q")) {
             if (displayStyleBracketOrBorder) {
                 displayBracket();
