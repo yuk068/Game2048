@@ -11,8 +11,8 @@ public class Board {
     public static int DEFAULT_COL_NUM;
     public static int DEFAULT_INITIAL_NODE;
     public static int DEFAULT_SPAWN;
-    private static Square[][] board;
-    private static Square[][] prevBoard;
+    private static Tile[][] board;
+    private static Tile[][] prevBoard;
     private static Board session;
 
     private Board() {
@@ -20,7 +20,7 @@ public class Board {
         setDefaultColNum(4);
         setDefaultInitialNode(2);
         setDefaultSpawn(1);
-        board = new Square[DEFAULT_ROW_NUM][DEFAULT_COL_NUM];
+        board = new Tile[DEFAULT_ROW_NUM][DEFAULT_COL_NUM];
         init();
     }
 
@@ -29,7 +29,7 @@ public class Board {
         setDefaultColNum(numCol);
         setDefaultInitialNode(2);
         setDefaultSpawn(1);
-        board = new Square[DEFAULT_ROW_NUM][DEFAULT_COL_NUM];
+        board = new Tile[DEFAULT_ROW_NUM][DEFAULT_COL_NUM];
         init();
     }
 
@@ -38,7 +38,7 @@ public class Board {
         setDefaultColNum(numCol);
         setDefaultInitialNode(numInitNode);
         setDefaultSpawn(numSpawn);
-        board = new Square[DEFAULT_ROW_NUM][DEFAULT_COL_NUM];
+        board = new Tile[DEFAULT_ROW_NUM][DEFAULT_COL_NUM];
         init();
     }
 
@@ -83,19 +83,19 @@ public class Board {
                 numSpawn == 0 ? 1 : Math.abs(numSpawn);
     }
 
-    public static Square[][] getPrevBoard() {
+    public static Tile[][] getPrevBoard() {
         return prevBoard;
     }
 
-    public static void setPrevBoard(Square[][] prevBoard) {
+    public static void setPrevBoard(Tile[][] prevBoard) {
         Board.prevBoard = prevBoard;
     }
 
-    public static Square[][] getBoard() {
+    public static Tile[][] getBoard() {
         return board;
     }
 
-    public static void setBoard(Square[][] board) {
+    public static void setBoard(Tile[][] board) {
         Board.board = board;
     }
 
@@ -109,7 +109,7 @@ public class Board {
     private static void initializeBoard() {
         for (int i = 0; i < DEFAULT_ROW_NUM; i++) {
             for (int j = 0; j < DEFAULT_COL_NUM; j++) {
-                board[i][j] = new Square(i, j);
+                board[i][j] = new Tile(i, j);
             }
         }
     }
@@ -139,11 +139,11 @@ public class Board {
     private void moveMergeHelper(boolean moveOrMerge, int startRow, int startCol, int deltaRow, int deltaCol) {
         for (int row = startRow; (startRow == 0 ? row < DEFAULT_ROW_NUM : row >= 0); row += (startRow == 0 ? 1 : -1)) {
             for (int col = startCol; (startCol == 0 ? col < DEFAULT_COL_NUM : col >= 0); col += (startCol == 0 ? 1 : -1)) {
-                Square square = board[row][col];
-                if (square.isOccupied()) {
-                    NumberNode currentNode = square.getNumberNode();
+                Tile tile = board[row][col];
+                if (tile.isOccupied()) {
+                    NumberNode currentNode = tile.getNumberNode();
                     if (moveOrMerge) moveNode(row, col, currentNode, deltaRow, deltaCol);
-                    else if (!square.getNumberNode().isRecentlyMerged())
+                    else if (!tile.getNumberNode().isRecentlyMerged())
                         mergeNode(row, col, currentNode, deltaRow, deltaCol);
                 }
             }
@@ -226,19 +226,19 @@ public class Board {
         return row >= 0 && row < DEFAULT_ROW_NUM && col >= 0 && col < DEFAULT_COL_NUM;
     }
 
-    protected static Square[][] copyOfBoard(Square[][] originalMatrix) {
+    protected static Tile[][] copyOfBoard(Tile[][] originalMatrix) {
         int numRows = originalMatrix.length;
         int numCols = originalMatrix[0].length;
-        Square[][] copiedMatrix = new Square[numRows][numCols];
+        Tile[][] copiedMatrix = new Tile[numRows][numCols];
         for (int i = 0; i < numRows; i++) {
             for (int j = 0; j < numCols; j++) {
-                copiedMatrix[i][j] = new Square(originalMatrix[i][j].getNumberNode(), i, j);
+                copiedMatrix[i][j] = new Tile(originalMatrix[i][j].getNumberNode(), i, j);
             }
         }
         return copiedMatrix;
     }
 
-    protected static boolean areBoardsEqual(Square[][] board1, Square[][] board2) {
+    protected static boolean areBoardsEqual(Tile[][] board1, Tile[][] board2) {
         if (board1.length != board2.length || board1[0].length != board2[0].length) {
             return false;
         }

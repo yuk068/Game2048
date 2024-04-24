@@ -1,17 +1,17 @@
 package game2048;
 
-public class Square {
+public class Tile {
 
     private NumberNode numberNode;
     private final int posX;
     private final int posY;
 
-    public Square(int posX, int posY) {
+    public Tile(int posX, int posY) {
         this.posX = posX;
         this.posY = posY;
     }
 
-    public Square(NumberNode numberNode, int posX, int posY) {
+    public Tile(NumberNode numberNode, int posX, int posY) {
         this.numberNode = numberNode;
         this.posX = posX;
         this.posY = posY;
