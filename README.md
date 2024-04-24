@@ -6,9 +6,6 @@ then invoke .start() (example in class Main)
 
 # To be implemented:
 
-1. Board customization
-   * Size
-   * Number of initial node
-   * Rate for initial node
+1. Board customization : done
 2. Undo operation
 3. Reshuffle operation
