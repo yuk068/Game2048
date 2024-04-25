@@ -5,7 +5,7 @@ public class Main {
     public static void main(String[] args) {
         // Default vanilla 2048 game
         // Args: numRow, numCol, numInitialNode, numSpawn
-        Game2048 game = Game2048.getInstance(2, 2, 1, 1);
+        Game2048 game = Game2048.getInstance();
         game.start();
     }
 
