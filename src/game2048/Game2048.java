@@ -60,8 +60,8 @@ public class Game2048 {
     }
 
     public void displayBracket() {
-        for (int i = 0; i < Board.DEFAULT_ROW_NUM; i++) {
-            for (int j = 0; j < Board.DEFAULT_COL_NUM; j++) {
+        for (int i = 0; i < Board.rowNum; i++) {
+            for (int j = 0; j < Board.rowCol; j++) {
                 System.out.printf("[%4s] ", (Board.board[i][j].isOccupied() ?
                         String.valueOf(Board.board[i][j].getNumberNode().getValue()) : " "));
             }
@@ -70,22 +70,22 @@ public class Game2048 {
     }
 
     public void displayBorder() {
-        for (int i = 0; i < Board.DEFAULT_COL_NUM * 7 + 1; i++) {
+        for (int i = 0; i < Board.rowCol * 7 + 1; i++) {
             System.out.print("-");
         }
         System.out.println();
 
-        for (int i = 0; i < Board.DEFAULT_ROW_NUM; i++) {
+        for (int i = 0; i < Board.rowNum; i++) {
             System.out.print("|");
-            for (int j = 0; j < Board.DEFAULT_COL_NUM; j++) {
+            for (int j = 0; j < Board.rowCol; j++) {
                 String number = Board.board[i][j].isOccupied() ?
                         String.valueOf(Board.board[i][j].getNumberNode().getValue()) : " ";
                 System.out.printf("%5s |", number);
             }
-            System.out.println((i != Board.DEFAULT_ROW_NUM - 1) ? "\n" : "");
+            System.out.println((i != Board.rowNum - 1) ? "\n" : "");
         }
 
-        for (int i = 0; i < Board.DEFAULT_COL_NUM * 7 + 1; i++) {
+        for (int i = 0; i < Board.rowCol * 7 + 1; i++) {
             System.out.print("-");
         }
         System.out.println();
@@ -131,7 +131,7 @@ public class Game2048 {
                 Board.gameState.push(Board.prevBoard);
                 Board.action.push(0);
                 moves++;
-                for (int i = 0; i < Board.DEFAULT_SPAWN; i++) {
+                for (int i = 0; i < Board.numSpawn; i++) {
                     Board.placeRandomNumberNode();
                 }
             }
