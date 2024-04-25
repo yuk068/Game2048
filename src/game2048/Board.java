@@ -1,9 +1,6 @@
 package game2048;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Board {
 
@@ -13,6 +10,8 @@ public class Board {
     public static int DEFAULT_SPAWN;
     private static Tile[][] board;
     private static Tile[][] prevBoard;
+    protected static Stack<Tile[][]> gameState = new Stack<>();
+    protected static Stack<Integer> action = new Stack<>(); // 0 is move, 1 is shuffling
     private static Board session;
 
     private Board() {
@@ -104,12 +103,13 @@ public class Board {
         for (int i = 0; i < DEFAULT_INITIAL_NODE; i++) {
             placeRandomNumberNode();
         }
+        gameState.push(getBoard());
     }
 
     private static void initializeBoard() {
         for (int i = 0; i < DEFAULT_ROW_NUM; i++) {
             for (int j = 0; j < DEFAULT_COL_NUM; j++) {
-                board[i][j] = new Tile(i, j);
+                board[i][j] = new Tile();
             }
         }
     }
@@ -167,6 +167,9 @@ public class Board {
     }
 
     public void shuffleBoard() {
+        setPrevBoard(copyOfBoard(board));
+        gameState.push(prevBoard);
+        action.push(1);
         List<NumberNode> numberNodes = new ArrayList<>();
 
         for (int i = 0; i < DEFAULT_ROW_NUM; i++) {
@@ -176,7 +179,6 @@ public class Board {
                 }
             }
         }
-
         Collections.shuffle(numberNodes);
 
         int index = 0;
@@ -188,6 +190,16 @@ public class Board {
             }
         }
         prevBoard = null;
+    }
+
+    public boolean undo() {
+        if (gameState.size() == 1) {
+            System.out.println("Can't undo any further");
+            return false;
+        }
+        System.out.println("Undoing last action...");
+        setBoard(gameState.pop());
+        return action.pop() == 0;
     }
 
     private void moveNode(int row, int col, NumberNode currentNode, int deltaRow, int deltaCol) {
@@ -232,7 +244,7 @@ public class Board {
         Tile[][] copiedMatrix = new Tile[numRows][numCols];
         for (int i = 0; i < numRows; i++) {
             for (int j = 0; j < numCols; j++) {
-                copiedMatrix[i][j] = new Tile(originalMatrix[i][j].getNumberNode(), i, j);
+                copiedMatrix[i][j] = new Tile(originalMatrix[i][j].getNumberNode());
             }
         }
         return copiedMatrix;

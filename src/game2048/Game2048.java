@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class Game2048 {
 
     private static Game2048 session;
-    private Board board;
+    private final Board board;
     private boolean displayStyleBracketOrBorder = false;
     public static final Scanner in = new Scanner(System.in);
     private int moves = 0;
@@ -46,7 +46,7 @@ public class Game2048 {
         System.out.println("wasd    to move");
         System.out.println("q       to quit");
         System.out.println("shuffle to shuffle the board");
-        System.out.println("undo    to undo last action (WIP)");
+        System.out.println("undo    to undo last action");
         while (!op.equals("q")) {
             if (displayStyleBracketOrBorder) {
                 displayBracket();
@@ -54,7 +54,7 @@ public class Game2048 {
                 displayBorder();
             }
             op = in.nextLine();
-            move(op);
+            operation(op);
         }
         System.out.println("Exiting...");
     }
@@ -91,7 +91,7 @@ public class Game2048 {
         System.out.println();
     }
 
-    public void move(String operation) {
+    public void operation(String operation) {
         switch (operation.toLowerCase()) {
             case "w":
                 moveOperation("Up");
@@ -106,7 +106,7 @@ public class Game2048 {
                 moveOperation("Left");
                 break;
             case "undo":
-                System.out.println("Undo coming soon!");
+                if (board.undo()) moves--;
                 break;
             case "shuffle":
                 System.out.println("Shuffling...");
@@ -117,17 +117,19 @@ public class Game2048 {
     }
 
     private void moveOperation(String direction) {
-        String movingIn = "moveMerge" + direction;
+        String moveMergeIn = "moveMerge" + direction;
         try {
             Board.setPrevBoard(Board.copyOfBoard(Board.getBoard()));
 
-            Method method = Board.class.getDeclaredMethod(movingIn, boolean.class);
+            Method method = Board.class.getDeclaredMethod(moveMergeIn, boolean.class);
             method.invoke(board, true);
             method.invoke(board, false);
             method.invoke(board, true);
             board.nullifyAllRecentlyMerged();
 
             if (!Board.areBoardsEqual(Board.getPrevBoard(), Board.getBoard())) {
+                Board.gameState.push(Board.getPrevBoard());
+                Board.action.push(0);
                 moves++;
                 for (int i = 0; i < Board.DEFAULT_SPAWN; i++) {
                     Board.placeRandomNumberNode();

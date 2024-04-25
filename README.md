@@ -8,5 +8,6 @@ then invoke .start() (example in class Main)
 
 1. Board customization : done
 2. Gameover operation (right now, only inputting "q" can terminate the instance)
-3. Undo operation (maybe inputting "undo"?)
+3. Undo operation : done
 4. Shuffle operation : done
+5. Highscore system?, Achivement?, Some kind of logger?
