@@ -4,27 +4,27 @@ public class Tile {
 
     private NumberNode numberNode;
 
-    public Tile() {
+    protected Tile() {
 
     }
 
-    public Tile(NumberNode numberNode) {
+    protected Tile(NumberNode numberNode) {
         this.numberNode = numberNode;
     }
 
-    public boolean isOccupied() {
+    protected boolean isOccupied() {
         return getNumberNode() != null;
     }
 
-    public void setNumberNode(NumberNode numberNode) {
+    protected void setNumberNode(NumberNode numberNode) {
         this.numberNode = numberNode;
     }
 
-    public NumberNode getNumberNode() {
+    protected NumberNode getNumberNode() {
         return numberNode;
     }
 
-    public void nullifyRecentlyMerged() {
+    protected void nullifyRecentlyMerged() {
         if (isOccupied()) numberNode.setRecentlyMerged(false);
     }
 

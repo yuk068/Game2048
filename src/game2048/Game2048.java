@@ -8,7 +8,7 @@ public class Game2048 {
     private static Game2048 session;
     private final Board board;
     private boolean displayStyleBracketOrBorder = false;
-    public static final Scanner in = new Scanner(System.in);
+    private static final Scanner in = new Scanner(System.in);
     private int moves = 0;
 
     private Game2048(Board board) {

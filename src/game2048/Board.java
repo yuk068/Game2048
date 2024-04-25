@@ -41,21 +41,21 @@ public class Board {
         init();
     }
 
-    public static Board getInstance() {
+    protected static Board getInstance() {
         if (session == null) {
             session = new Board();
         }
         return session;
     }
 
-    public static Board getInstance(int numRow, int numCol) {
+    protected static Board getInstance(int numRow, int numCol) {
         if (session == null) {
             session = new Board(numRow, numCol);
         }
         return session;
     }
 
-    public static Board getInstance(int numRow, int numCol, int numInitNode, int numSpawn) {
+    protected static Board getInstance(int numRow, int numCol, int numInitNode, int numSpawn) {
         if (session == null) {
             session = new Board(numRow, numCol, numInitNode, numSpawn);
         }
@@ -70,11 +70,11 @@ public class Board {
         DEFAULT_COL_NUM = numCol == 0 ? 1 : Math.abs(numCol);
     }
 
-    public void setDefaultInitialNode(int numInitNode) {
+    private void setDefaultInitialNode(int numInitNode) {
         DEFAULT_INITIAL_NODE = numInitNode == 0 ? 1 : Math.abs(numInitNode);
     }
 
-    public void setDefaultSpawn(int numSpawn) {
+    private void setDefaultSpawn(int numSpawn) {
         DEFAULT_SPAWN = numSpawn == 0 ? 1 : Math.abs(numSpawn);
     }
 
@@ -146,7 +146,7 @@ public class Board {
         moveMergeHelper(moveOrMerge, 0, 0, 0, -1);
     }
 
-    public void shuffleBoard() {
+    protected void shuffleBoard() {
         prevBoard = copyOfBoard(board);
         gameState.push(prevBoard);
         action.push(1);
@@ -172,7 +172,7 @@ public class Board {
         prevBoard = null;
     }
 
-    public boolean undo() {
+    protected boolean undo() {
         if (gameState.size() <= 1) {
             System.out.println("Can't undo any further");
             return false;

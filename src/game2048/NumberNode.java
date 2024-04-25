@@ -8,32 +8,32 @@ public class NumberNode implements Comparable<NumberNode> {
     private boolean recentlyMerged;
     private static final double TWO_NODE_RATE = 0.9;
 
-    public NumberNode() {
+    protected NumberNode() {
 
     }
 
-    public NumberNode(int value) {
+    protected NumberNode(int value) {
         this.value = value;
     }
 
-    public int getValue() {
+    protected int getValue() {
         return value;
     }
 
-    public boolean isRecentlyMerged() {
+    protected boolean isRecentlyMerged() {
         return recentlyMerged;
     }
 
-    public void setRecentlyMerged(boolean recentlyMerged) {
+    protected void setRecentlyMerged(boolean recentlyMerged) {
         this.recentlyMerged = recentlyMerged;
     }
 
-    public void setRandomInitialValue() {
+    protected void setRandomInitialValue() {
         double rate = new Random().nextDouble();
         value = rate < TWO_NODE_RATE ? 2 : 4;
     }
 
-    public NumberNode mergeWith(NumberNode other) {
+    protected NumberNode mergeWith(NumberNode other) {
         if (this.value == other.value) {
             return new NumberNode(this.value * 2);
         } else {
