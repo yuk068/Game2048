@@ -62,8 +62,8 @@ public class Game2048 {
     public void displayBracket() {
         for (int i = 0; i < Board.DEFAULT_ROW_NUM; i++) {
             for (int j = 0; j < Board.DEFAULT_COL_NUM; j++) {
-                System.out.printf("[%4s] ", (Board.getBoard()[i][j].isOccupied() ?
-                        String.valueOf(Board.getBoard()[i][j].getNumberNode().getValue()) : " "));
+                System.out.printf("[%4s] ", (Board.board[i][j].isOccupied() ?
+                        String.valueOf(Board.board[i][j].getNumberNode().getValue()) : " "));
             }
             System.out.println("\n");
         }
@@ -78,8 +78,8 @@ public class Game2048 {
         for (int i = 0; i < Board.DEFAULT_ROW_NUM; i++) {
             System.out.print("|");
             for (int j = 0; j < Board.DEFAULT_COL_NUM; j++) {
-                String number = Board.getBoard()[i][j].isOccupied() ?
-                        String.valueOf(Board.getBoard()[i][j].getNumberNode().getValue()) : " ";
+                String number = Board.board[i][j].isOccupied() ?
+                        String.valueOf(Board.board[i][j].getNumberNode().getValue()) : " ";
                 System.out.printf("%5s |", number);
             }
             System.out.println((i != Board.DEFAULT_ROW_NUM - 1) ? "\n" : "");
@@ -119,7 +119,7 @@ public class Game2048 {
     private void moveOperation(String direction) {
         String moveMergeIn = "moveMerge" + direction;
         try {
-            Board.setPrevBoard(Board.copyOfBoard(Board.getBoard()));
+            Board.prevBoard = Board.copyOfBoard(Board.board);
 
             Method method = Board.class.getDeclaredMethod(moveMergeIn, boolean.class);
             method.invoke(board, true);
@@ -127,8 +127,8 @@ public class Game2048 {
             method.invoke(board, true);
             board.nullifyAllRecentlyMerged();
 
-            if (!Board.areBoardsEqual(Board.getPrevBoard(), Board.getBoard())) {
-                Board.gameState.push(Board.getPrevBoard());
+            if (!Board.areBoardsEqual(Board.prevBoard, Board.board)) {
+                Board.gameState.push(Board.prevBoard);
                 Board.action.push(0);
                 moves++;
                 for (int i = 0; i < Board.DEFAULT_SPAWN; i++) {

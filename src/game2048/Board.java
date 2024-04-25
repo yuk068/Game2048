@@ -8,11 +8,11 @@ public class Board {
     public static int DEFAULT_COL_NUM;
     public static int DEFAULT_INITIAL_NODE;
     public static int DEFAULT_SPAWN;
-    private static Tile[][] board;
-    private static Tile[][] prevBoard;
+    protected static Tile[][] board;
+    protected static Tile[][] prevBoard;
     protected static Stack<Tile[][]> gameState = new Stack<>();
-    protected static Stack<Integer> action = new Stack<>(); // 0 is move, 1 is shuffling
-    private static Board session;
+    protected static Stack<Integer> action = new Stack<>(); // 0 is moving, 1 is shuffling
+    protected static Board session;
 
     private Board() {
         setDefaultRowNum(4);
@@ -63,50 +63,30 @@ public class Board {
     }
 
     private void setDefaultRowNum(int numRow) {
-        DEFAULT_ROW_NUM =
-                numRow == 0 ? 1 : Math.abs(numRow);
+        DEFAULT_ROW_NUM = numRow == 0 ? 1 : Math.abs(numRow);
     }
 
     private void setDefaultColNum(int numCol) {
-        DEFAULT_COL_NUM =
-                numCol == 0 ? 1 : Math.abs(numCol);
+        DEFAULT_COL_NUM = numCol == 0 ? 1 : Math.abs(numCol);
     }
 
     public void setDefaultInitialNode(int numInitNode) {
-        DEFAULT_INITIAL_NODE =
-                numInitNode == 0 ? 1 : Math.abs(numInitNode);
+        DEFAULT_INITIAL_NODE = numInitNode == 0 ? 1 : Math.abs(numInitNode);
     }
 
     public void setDefaultSpawn(int numSpawn) {
-        DEFAULT_SPAWN =
-                numSpawn == 0 ? 1 : Math.abs(numSpawn);
-    }
-
-    public static Tile[][] getPrevBoard() {
-        return prevBoard;
-    }
-
-    public static void setPrevBoard(Tile[][] prevBoard) {
-        Board.prevBoard = prevBoard;
-    }
-
-    public static Tile[][] getBoard() {
-        return board;
-    }
-
-    public static void setBoard(Tile[][] board) {
-        Board.board = board;
+        DEFAULT_SPAWN = numSpawn == 0 ? 1 : Math.abs(numSpawn);
     }
 
     private static void init() {
-        initializeBoard();
+        initializeBlankBoard();
         for (int i = 0; i < DEFAULT_INITIAL_NODE; i++) {
             placeRandomNumberNode();
         }
-        gameState.push(getBoard());
+        gameState.push(board);
     }
 
-    private static void initializeBoard() {
+    private static void initializeBlankBoard() {
         for (int i = 0; i < DEFAULT_ROW_NUM; i++) {
             for (int j = 0; j < DEFAULT_COL_NUM; j++) {
                 board[i][j] = new Tile();
@@ -167,7 +147,7 @@ public class Board {
     }
 
     public void shuffleBoard() {
-        setPrevBoard(copyOfBoard(board));
+        prevBoard = copyOfBoard(board);
         gameState.push(prevBoard);
         action.push(1);
         List<NumberNode> numberNodes = new ArrayList<>();
@@ -193,12 +173,12 @@ public class Board {
     }
 
     public boolean undo() {
-        if (gameState.size() == 1) {
+        if (gameState.size() <= 1) {
             System.out.println("Can't undo any further");
             return false;
         }
         System.out.println("Undoing last action...");
-        setBoard(gameState.pop());
+        board = gameState.pop();
         return action.pop() == 0;
     }
 
