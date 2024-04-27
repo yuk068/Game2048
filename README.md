@@ -1,10 +1,10 @@
-## Some simple Number - related Games made in java
+# Some simple Number - related Games made in java
 
-# Yuk's 2048 Game
+## 2048 Game
 
-Simple 2048 game playable in terminal, play by getting the Game2048 instance then invoke .start() (example in class Main)
+Simple 2048 game playable in terminal, play by getting the Game2048 instance then invoke .start() (example in class Main).
 
-# To be implemented:
+### To be implemented:
 
 1. Board customization : done
 2. Gameover operation (right now, only inputting "q" can terminate the instance)
@@ -12,6 +12,12 @@ Simple 2048 game playable in terminal, play by getting the Game2048 instance the
 4. Shuffle operation : done
 5. Highscore system?, Achivement?, Some kind of logger?
 
-# Number Stack Game
+## Number Stack Game
 
-You can select the number of stack (>= 3), you can manipulate the top element to free stacks, all stacks's base value are non - duplicate, you win if all stacks only contains their base value
+In this game, you have a minimum of three stacks. Each stack contains a base value at the bottom, which is unique for each stack, and random elements above it. The objective is to manipulate the stacks by moving the top element of any stack to another non-full stack. You win the game when all stacks contain only the base value at.
+
+Play by getting the GameNumberStack instance then invoke .start() (example in class Main).
+
+### To be implemented:
+
+1. Working with a friend to develop a solver for this game
