@@ -1,10 +1,12 @@
 package gamenumberstack;
 
+import numbergame.NumberGame;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class GameNumberStack {
+public class GameNumberStack implements NumberGame {
 
     private int moves; // Number of moves
     protected final int numStack; // Number of stacks

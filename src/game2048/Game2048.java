@@ -1,9 +1,11 @@
 package game2048;
 
+import numbergame.NumberGame;
+
 import java.lang.reflect.Method;
 import java.util.Scanner;
 
-public class Game2048 {
+public class Game2048 implements NumberGame {
 
     private static Game2048 session;
     private final Board board;
@@ -19,7 +21,7 @@ public class Game2048 {
         this.displayStyleBracketOrBorder = displayStyleBracketOrBorder;
     }
 
-    public static Game2048 getInstance() {
+    public static NumberGame getInstance(int dummy) {
         if (session == null) {
             session = new Game2048(Board.getInstance());
         }
