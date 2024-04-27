@@ -21,7 +21,7 @@ public class Game2048 implements NumberGame {
         this.displayStyleBracketOrBorder = displayStyleBracketOrBorder;
     }
 
-    public static NumberGame getInstance(int dummy) {
+    public static NumberGame getInstance() {
         if (session == null) {
             session = new Game2048(Board.getInstance());
         }

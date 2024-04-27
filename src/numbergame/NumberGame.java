@@ -2,7 +2,7 @@ package numbergame;
 
 public interface NumberGame {
 
-    static NumberGame getInstance(int args) {
+    static NumberGame getInstance() {
         return null;
     }
 

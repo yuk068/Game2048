@@ -32,6 +32,11 @@ public class GameNumberStack implements NumberGame {
         return session;
     }
 
+    public static NumberGame getInstance() {
+        session = getInstance(4);
+        return session;
+    }
+
     public void start() {
         String op;
         while (true) {
