@@ -15,6 +15,7 @@ public class GameNumberStack implements NumberGame {
     protected final List<NumberNodeStack> stacks; // List of stacks
     private static final Scanner in = new Scanner(System.in);
     private static final int DEFAULT_MIN_NUM_STACK = 3;
+    private static final int DEFAULT_NUM_STACK = 4;
 
     private GameNumberStack(int numStack) {
         maxSize = numStack + 1;
@@ -33,7 +34,7 @@ public class GameNumberStack implements NumberGame {
     }
 
     public static NumberGame getInstance() {
-        session = getInstance(4);
+        session = getInstance(DEFAULT_NUM_STACK);
         return session;
     }
 
