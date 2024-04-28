@@ -1,35 +1,25 @@
 package game2048;
 
-import numbergame.NumberGame;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.net.URL;
 
-public class Game2048GUI extends JFrame implements NumberGame {
+public class Game2048GUI extends JFrame {
 
-    private static NumberGame session;
-    private static Game2048 game;
-    private boolean mute = false;
+    private static final ClassLoader classLoader = Game2048GUI.class.getClassLoader();
+    private static Game2048 game;    private boolean mute = false;
     private final JLabel[][] tiles;
     private final JLabel movesLabel;
     private final JPanel cards;
     private final CardLayout cardLayout;
     private String currentPanelName = "guidePanel";
 
-    public static NumberGame getInstance() {
-        if (session == null) {
-            session = new Game2048GUI();
-        }
-        return session;
-    }
-
-    @Override
-    public void start() {
+    public static void start() {
         SwingUtilities.invokeLater(() -> {
-            Game2048GUI game2048GUI = (Game2048GUI) getInstance();
-            game2048GUI.setVisible(true); // Assuming you want to make the GUI visible when starting the game
+            Game2048GUI game2048GUI = new Game2048GUI();
+            game2048GUI.setVisible(true);
         });
     }
 
@@ -39,7 +29,7 @@ public class Game2048GUI extends JFrame implements NumberGame {
         }
         tiles = new JLabel[Board.rowNum][Board.rowCol];
 
-        setTitle("2048");
+        setTitle("Yuk-Sensei and Hare's 2048");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
@@ -52,7 +42,7 @@ public class Game2048GUI extends JFrame implements NumberGame {
         guidePanel.setLayout(new BorderLayout());
         cards.add(guidePanel, "guidePanel");
 
-        JLabel guideLabel = getjLabel();
+        JPanel guideLabel = getGuidePanel();
         guidePanel.add(guideLabel, BorderLayout.CENTER);
 
         JPanel gamePanel = new JPanel();
@@ -69,12 +59,13 @@ public class Game2048GUI extends JFrame implements NumberGame {
                 tiles[i][j].setHorizontalAlignment(SwingConstants.CENTER);
                 tiles[i][j].setOpaque(true);
                 tiles[i][j].setBackground(Color.BLACK);
-                tiles[i][j].setBorder(BorderFactory.createLineBorder(Color.WHITE));
+                tiles[i][j].setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
 
                 tiles[i][j].setPreferredSize(new Dimension(100, 100));
 
-                Font font = tiles[i][j].getFont();
-                tiles[i][j].setFont(font.deriveFont(Font.BOLD, 32));
+                Font impactFont = new Font("Impact", Font.PLAIN, 39);
+                tiles[i][j].setFont(impactFont);
+
                 tiles[i][j].setForeground(Color.WHITE);
                 gameBoardPanel.add(tiles[i][j]);
             }
@@ -82,8 +73,8 @@ public class Game2048GUI extends JFrame implements NumberGame {
 
         movesLabel = new JLabel("Moves: " + game.getMoves());
         movesLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        Font movesFont = movesLabel.getFont();
-        movesLabel.setFont(movesFont.deriveFont(Font.BOLD, 30));
+        Font impactFontMoves = new Font("Impact", Font.PLAIN, 20);
+        movesLabel.setFont(impactFontMoves);
         movesLabel.setForeground(Color.BLACK);
         gamePanel.add(movesLabel, BorderLayout.NORTH);
 
@@ -95,31 +86,39 @@ public class Game2048GUI extends JFrame implements NumberGame {
             @Override
             public void keyPressed(KeyEvent e) {
                 switch (e.getKeyCode()) {
+                    case KeyEvent.VK_W:
                     case KeyEvent.VK_UP:
                         game.operation("w");
                         break;
+                    case KeyEvent.VK_S:
                     case KeyEvent.VK_DOWN:
                         game.operation("s");
                         break;
+                    case KeyEvent.VK_A:
                     case KeyEvent.VK_LEFT:
                         game.operation("a");
                         break;
+                    case KeyEvent.VK_D:
                     case KeyEvent.VK_RIGHT:
                         game.operation("d");
                         break;
-                    case KeyEvent.VK_1:
+                    case KeyEvent.VK_Z:
                         game.operation("shuffle");
                         break;
-                    case KeyEvent.VK_2:
+                    case KeyEvent.VK_U:
                         game.operation("undo");
                         break;
                     case KeyEvent.VK_ESCAPE:
                         System.exit(0);
                         break;
-                    case KeyEvent.VK_BACK_SPACE:
+                    case KeyEvent.VK_M:
                         mute = !mute;
                         break;
+                    case KeyEvent.VK_V:
+                        SFX.cycleVolumeLevel();
+                        break;
                     case KeyEvent.VK_ENTER:
+                    case KeyEvent.VK_G:
                         if (currentPanelName.equals("gamePanel")) {
                             cardLayout.show(cards, "guidePanel");
                             currentPanelName = "guidePanel";
@@ -132,7 +131,7 @@ public class Game2048GUI extends JFrame implements NumberGame {
                         break;
                 }
                 if (!mute) {
-                    SFX.playSound("C:\\Users\\Phong Vu\\IdeaProjects\\Game2048\\src\\game2048\\xphit.wav");
+                    SFX.playSound("8bit_chirp.wav");
                 }
                 updateDisplay();
             }
@@ -142,6 +141,11 @@ public class Game2048GUI extends JFrame implements NumberGame {
             }
         });
 
+        ImageIcon icon = new ImageIcon(getImageURL("hare_momotalk.png"));
+        setIconImage(icon.getImage());
+
+        setSize(400, 400);
+        setLocationRelativeTo(null);
         setFocusable(true);
         requestFocusInWindow();
         updateDisplay();
@@ -151,17 +155,25 @@ public class Game2048GUI extends JFrame implements NumberGame {
     }
 
     private boolean startNewGame() {
-        ImageIcon icon = new ImageIcon("");
+        ImageIcon icon = new ImageIcon(getImageURL("hare_momotalk.png"));
         String title = "2048 Game Configuration";
-
-        String inputNumCol = JOptionPane.showInputDialog(null, "Enter the number of columns for the game board:", title, JOptionPane.PLAIN_MESSAGE, icon, null, "").toString();
-        String inputNumRow = JOptionPane.showInputDialog(null, "Enter the number of rows for the game board:", title, JOptionPane.PLAIN_MESSAGE, icon, null, "").toString();
+        boolean devMode = false;
+        String devModeNotification = "";
+        String inputNumCol = JOptionPane.showInputDialog(null, "Enter the number of columns for the game board: (ENTER for Default)", title, JOptionPane.PLAIN_MESSAGE, icon, null, "").toString();
+        if (inputNumCol.isEmpty()) {
+            game = new Game2048(new Board(4, 4, 2, 1));
+            return true;
+        } else if (inputNumCol.split("_")[0].equals("VERITAS")) {
+            devMode = true;
+            devModeNotification = " (DEV MODE ACTIVATED)";
+            inputNumCol = inputNumCol.split("_")[1];
+        }
+        String inputNumRow = JOptionPane.showInputDialog(null, "Enter the number of rows for the game board:" + devModeNotification, title, JOptionPane.PLAIN_MESSAGE, icon, null, "").toString();
         String inputInitialSpawn = JOptionPane.showInputDialog(null, "Enter the initial spawn value for the game board:", title, JOptionPane.PLAIN_MESSAGE, icon, null, "").toString();
         String inputNumSpawn = JOptionPane.showInputDialog(null, "Enter the number of spawns for each move:", title, JOptionPane.PLAIN_MESSAGE, icon, null, "").toString();
 
-        // Check if any input is null (indicating cancel or close button)
-        if (inputNumCol == null || inputNumRow == null || inputInitialSpawn == null || inputNumSpawn == null) {
-            return false; // User canceled or closed the dialog
+        if (!devMode && (inputNumRow == null || inputInitialSpawn == null || inputNumSpawn == null)) {
+            return false;
         }
 
         try {
@@ -170,9 +182,9 @@ public class Game2048GUI extends JFrame implements NumberGame {
             int initialSpawn = Integer.parseInt(inputInitialSpawn);
             int numSpawn = Integer.parseInt(inputNumSpawn);
 
-            if (numCol > 16 || numRow > 16 || numSpawn > 10) {
-                JOptionPane.showMessageDialog(null, "Please don't go too insane\n" +
-                        "<= 16 for Rows and Columns, <= 10 for number of spawns", "Warning", JOptionPane.WARNING_MESSAGE);
+            if (!devMode && (numCol > 16 || numRow > 16 || numSpawn > 10)) {
+                JOptionPane.showMessageDialog(null, "Please don't go too insane (Pill time lil bro)\n" +
+                        "<= 16 for Rows and Columns, <= 10 for number of spawns", "Warning", JOptionPane.WARNING_MESSAGE, icon);
                 return false;
             }
 
@@ -185,16 +197,42 @@ public class Game2048GUI extends JFrame implements NumberGame {
     }
 
 
-    private static JLabel getjLabel() {
-        JLabel guideLabel = new JLabel("<html><div style='text-align: center;'>" +
+    private static JPanel getGuidePanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+
+        JLabel textLabel = getGuideText();
+
+        panel.add(textLabel, BorderLayout.NORTH);
+
+        ImageIcon imageIcon = new ImageIcon(getImageURL("hare.png"));
+        JLabel imageLabel = new JLabel(imageIcon);
+
+        panel.add(imageLabel, BorderLayout.CENTER);
+
+        return panel;
+    }
+
+    private static URL getImageURL(String fileName) {
+        String image = Game2048GUI.class.getPackageName().replace('.', '/') +
+                "/" + fileName;
+        return classLoader.getResource(image);
+    }
+
+    private static JLabel getGuideText() {
+        JLabel textLabel = new JLabel("<html><div style='text-align: center;'>" +
                 "<div style='font-size: 20px;'>Welcome to 2048!</div>" +
                 "<br>" +
-                "<div style='font-size: 16px;'>Move with ARROWS<br>Shuffle with 1<br>Undo with 2" +
-                "<br>Mute with BACKSPACE<br>Toggle between" +
-                "<br>guide and gameplay with ENTER<br>Quit with ESC" +
-                "<br>Made by Yuk, Have fun!</div></div></html>");
-        guideLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        return guideLabel;
+                "<div style='font-size: 12px;'>Move with ARROWS [&#x2190; &#x2193; &#x2191; &#x2192;] & [WASD]" +
+                "<br>Shuffle with [ Z ]" +
+                "<br>Undo with [ U ]" +
+                "<br>Adjust volume with [ V ]" +
+                "<br>Mute with [ M ]<br>Toggle between" +
+                "<br>guide and gameplay with [ G ]<br>Quit with [ ESC ]" +
+                "<br>Made by Yuk " +
+                "<br>and my wife Hare, say hi to her &#x2193" +
+                "<br>Have fun!</div></div></html>");
+        textLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        return textLabel;
     }
 
     private void updateDisplay() {
@@ -206,18 +244,21 @@ public class Game2048GUI extends JFrame implements NumberGame {
                     int value = boardTiles[i][j].getNumberNode().getValue();
                     tiles[i][j].setText(String.valueOf(value));
 
-                    float hue = (float) Math.log(value) / (float) Math.log(2048);
+                    float hue = (float) Math.log(value) / (float) Math.log(81920);
                     Color tileColor = Color.getHSBColor(hue, 1.0f, 1.0f);
                     tiles[i][j].setForeground(Color.BLACK);
                     tiles[i][j].setBackground(tileColor);
+                    int fontSize = 40 - (int) (Math.log10(value) * 6);
+                    Font impactFont = new Font("Impact", Font.PLAIN, fontSize);
+                    tiles[i][j].setFont(impactFont);
                 } else {
                     tiles[i][j].setText("");
-                    tiles[i][j].setBackground(Color.LIGHT_GRAY);
+                    tiles[i][j].setBackground(Color.GRAY);
                 }
             }
         }
 
-        movesLabel.setText("Moves: " + game.getMoves());
+        movesLabel.setText("Guide: [G] | Moves: " + game.getMoves() + " | Volume: " + (mute ? "Muted" : "||".repeat(SFX.volumeLevel + 1)));
     }
 
 }
