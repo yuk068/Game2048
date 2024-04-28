@@ -17,9 +17,8 @@ public class Board {
     protected static Tile[][] prevBoard;
     protected static Stack<Tile[][]> gameState = new Stack<>();
     protected static Stack<Integer> action = new Stack<>(); // 0 is moving, 1 is shuffling
-    protected static Board session;
 
-    private Board() {
+    public Board() {
         setRowNum(DEFAULT_ROW_NUM);
         setColNum(DEFAULT_COL_NUM);
         setInitialSpawn(DEFAULT_INITIAL_SPAWN);
@@ -28,7 +27,7 @@ public class Board {
         init();
     }
 
-    private Board(int numRow, int numCol) {
+    public Board(int numRow, int numCol) {
         setRowNum(numRow);
         setColNum(numCol);
         setInitialSpawn(2);
@@ -37,7 +36,7 @@ public class Board {
         init();
     }
 
-    private Board(int numRow, int numCol, int numInitNode, int numSpawn) {
+    public Board(int numRow, int numCol, int numInitNode, int numSpawn) {
         setRowNum(numRow);
         setColNum(numCol);
         setInitialSpawn(numInitNode);
@@ -46,41 +45,20 @@ public class Board {
         init();
     }
 
-    protected static Board getInstance() {
-        if (session == null) {
-            session = new Board();
-        }
-        return session;
-    }
-
-    protected static Board getInstance(int numRow, int numCol) {
-        if (session == null) {
-            session = new Board(numRow, numCol);
-        }
-        return session;
-    }
-
-    protected static Board getInstance(int numRow, int numCol, int numInitNode, int numSpawn) {
-        if (session == null) {
-            session = new Board(numRow, numCol, numInitNode, numSpawn);
-        }
-        return session;
-    }
-
     private void setRowNum(int numRow) {
-        rowNum = numRow == 0 ? 1 : Math.abs(numRow);
+        rowNum = numRow <= 1 ? 2 : Math.abs(numRow);
     }
 
     private void setColNum(int numCol) {
-        rowCol = numCol == 0 ? 1 : Math.abs(numCol);
+        rowCol = numCol <= 1 ? 2 : Math.abs(numCol);
     }
 
     private void setInitialSpawn(int numInitNode) {
-        initialSpawn = numInitNode == 0 ? 1 : Math.abs(numInitNode);
+        initialSpawn = numInitNode <= 1 ? 2 : Math.abs(numInitNode);
     }
 
     private void setNumSpawn(int numSpawn) {
-        Board.numSpawn = numSpawn == 0 ? 1 : Math.abs(numSpawn);
+        Board.numSpawn = numSpawn <= 1 ? 2 : Math.abs(numSpawn);
     }
 
     private static void init() {
@@ -179,10 +157,10 @@ public class Board {
 
     protected boolean undo() {
         if (gameState.size() <= 1) {
-            System.out.println("Can't undo any further");
+//            System.out.println("Can't undo any further");
             return false;
         }
-        System.out.println("Undoing last action...");
+//        System.out.println("Undoing last action...");
         board = gameState.pop();
         return action.pop() == 0;
     }

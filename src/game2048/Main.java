@@ -2,12 +2,12 @@ package game2048;
 
 import numbergame.NumberGame;
 
+import javax.swing.*;
+
 public class Main {
 
     public static void main(String[] args) {
-        // Default vanilla 2048 game
-        // Args: numRow, numCol, numInitialNode, numSpawn
-        NumberGame game = Game2048.getInstance();
+        NumberGame game = Game2048GUI.getInstance();
         game.start();
     }
 

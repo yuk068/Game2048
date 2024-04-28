@@ -1,45 +1,30 @@
 package game2048;
 
-import numbergame.NumberGame;
-
 import java.lang.reflect.Method;
 import java.util.Scanner;
 
-public class Game2048 implements NumberGame {
+public class Game2048 {
 
     private static Game2048 session;
-    private final Board board;
+    protected final Board board;
     private boolean displayStyleBracketOrBorder = false;
     private static final Scanner in = new Scanner(System.in);
     private int moves = 0;
 
-    private Game2048(Board board) {
+    public Game2048(Board board) {
         this.board = board;
+    }
+
+    public int getMoves() {
+        return moves;
+    }
+
+    public void setMoves(int moves) {
+        this.moves = moves;
     }
 
     public void setDisplayStyleBracketOrBorder(boolean displayStyleBracketOrBorder) {
         this.displayStyleBracketOrBorder = displayStyleBracketOrBorder;
-    }
-
-    public static NumberGame getInstance() {
-        if (session == null) {
-            session = new Game2048(Board.getInstance());
-        }
-        return session;
-    }
-
-    public static Game2048 getInstance(int numRow, int numCol) {
-        if (session == null) {
-            session = new Game2048(Board.getInstance(numRow, numCol));
-        }
-        return session;
-    }
-
-    public static Game2048 getInstance(int numRow, int numCol, int numInitNode, int numSpawn) {
-        if (session == null) {
-            session = new Game2048(Board.getInstance(numRow, numCol, numInitNode, numSpawn));
-        }
-        return session;
     }
 
     public void start() {
@@ -111,7 +96,7 @@ public class Game2048 implements NumberGame {
                 if (board.undo()) moves--;
                 break;
             case "shuffle":
-                System.out.println("Shuffling...");
+//                System.out.println("Shuffling...");
                 board.shuffleBoard();
                 break;
             default:
@@ -137,7 +122,7 @@ public class Game2048 implements NumberGame {
                     Board.placeRandomNumberNode();
                 }
             }
-            System.out.printf("Moving %-10s Moves:  %d%n", direction.toLowerCase(), moves);
+//            System.out.printf("Moving %-10s Moves:  %d%n", direction.toLowerCase(), moves);
         } catch (Exception e) {
             System.out.println("Invalid direction: " + direction);
         }
