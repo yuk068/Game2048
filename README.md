@@ -1,11 +1,12 @@
 # Some simple Number - related Games made in java
 
 ## 2048 Game
-Simple 2048 game playable in terminal, play by getting the Game2048GUI instance then invoke .start() (example in class Main).
+
+Simple 2048 game with GUI, customizable board size and utilities
 
 ### To be implemented:
 
-UPDATE: GUI availible
+1. Game over screen / operation
 
 ## Number Stack Game
 
